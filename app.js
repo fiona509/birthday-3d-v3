@@ -588,26 +588,6 @@ function torusArc(cx, cy, cz, major, minor, start, end, hex, segments = 20, tube
   return out;
 }
 
-function taperedPanel(cx, topY, cz, topWidth, bottomWidth, height, depth, hex) {
-  const y1 = topY;
-  const y0 = topY - height;
-  const z0 = cz - depth / 2;
-  const z1 = cz + depth / 2;
-  const topL = cx - topWidth / 2;
-  const topR = cx + topWidth / 2;
-  const botL = cx - bottomWidth / 2;
-  const botR = cx + bottomWidth / 2;
-  const c = color(hex);
-  const out = [];
-  pushFace(out, [[botL, y0, z1], [botR, y0, z1], [topR, y1, z1], [topL, y1, z1]], [0, 0, 1], c);
-  pushFace(out, [[botR, y0, z0], [botL, y0, z0], [topL, y1, z0], [topR, y1, z0]], [0, 0, -1], c);
-  pushFace(out, [[topL, y1, z0], [topL, y1, z1], [topR, y1, z1], [topR, y1, z0]], [0, 1, 0], c);
-  pushFace(out, [[botL, y0, z1], [botL, y0, z0], [botR, y0, z0], [botR, y0, z1]], [0, -1, 0], c);
-  pushFace(out, [[botR, y0, z1], [botR, y0, z0], [topR, y1, z0], [topR, y1, z1]], [1, 0, 0], c);
-  pushFace(out, [[botL, y0, z0], [botL, y0, z1], [topL, y1, z1], [topL, y1, z0]], [-1, 0, 0], c);
-  return out;
-}
-
 function torusFlat(cx, cy, cz, major, minor, hex, segments = 36, tube = 8) {
   const out = [];
   const c = color(hex);
@@ -779,7 +759,7 @@ function makeCoffeeTable() {
   addMesh("cake-plate-rim", torusFlat(0.46, plateTop + 0.008, 0.45, 0.31, 0.012, "#fff5e8", 42, 6));
   addMesh("cake-plate-contact", softShadow(0.46, plateTop + 0.004, 0.45, 0.24, 0.2));
   addMesh("cake-choco-layer", cylinder(0.46, cylinderOn(plateTop), 0.45, 0.25, cakeH, "#c99142", 42));
-  addMesh("cake-body-side-highlight", cylinder(0.46, cylinderOn(plateTop + 0.012), 0.45, 0.235, 0.02, "#dda958", 42));
+  addMesh("cake-body-highlight", cylinder(0.46, cylinderOn(plateTop + 0.012), 0.45, 0.235, 0.02, "#dda958", 42));
   addMesh("cake-layer-contact", softShadow(0.46, cakeTop + 0.004, 0.45, 0.22, 0.18));
   addMesh("cake-cream-band", torusFlat(0.46, cakeTop, 0.45, 0.25, 0.018, "#fff5e8", 42, 6));
   addMesh("cake-cream-layer", cylinder(0.46, cylinderOn(cakeTop), 0.45, 0.26, creamH, "#fff4e5", 42));
@@ -797,7 +777,7 @@ function makeCoffeeTable() {
   });
 
   addMesh("polaroid-shadow", softShadow(1.09, shadowOn(SURFACE.coffeeTop), 0.35, 0.26, 0.18));
-  addMesh("polaroid-body", ellipsoid(1.09, ellipsoidOn(SURFACE.coffeeTop, 0.12), 0.35, 0.12, 0.13, "#f8ead8", 10, 22));
+  addMesh("polaroid-body", ellipsoid(1.09, ellipsoidOn(SURFACE.coffeeTop, 0.12), 0.35, 0.26, 0.12, 0.13, "#f8ead8", 10, 22));
   addMesh("polaroid-face", cuboid(1.09, SURFACE.coffeeTop + 0.13, 0.49, 0.38, 0.16, 0.035, "#efe1ce"));
   addMesh("polaroid-lens", cylinder(1.0, cylinderOn(SURFACE.coffeeTop + 0.09), 0.51, 0.075, 0.04, "#22313b", 24));
   addMesh("polaroid-lens-glass", cylinder(1.0, cylinderOn(SURFACE.coffeeTop + 0.095), 0.555, 0.043, 0.025, "#6b8da2", 18));
@@ -1057,11 +1037,11 @@ function makeActonSpeaker(x, tableY, z) {
 }
 
 function makeHanger(x, railY, z, width) {
-  addMesh("hanger-hook", torusArc(x, railY + 0.01, z, 0.045, 0.008, Math.PI * 0.05, Math.PI * 1.2, "#8a643f", 14, 5));
+  addMesh("hanger-hook", torusArc(x, railY + 0.012, z, 0.045, 0.008, Math.PI * 0.05, Math.PI * 1.2, "#8a643f", 14, 5));
   addMesh("hanger-neck", cuboid(x, railY - 0.035, z, 0.025, 0.09, 0.026, "#8a643f"));
-  addMesh("hanger-bar", cuboid(x, railY - 0.105, z, width, 0.028, 0.032, "#8a643f"));
-  addMesh("hanger-left-slope", taperedPanel(x - width * 0.2, railY - 0.03, z, 0.035, 0.025, 0.14, 0.028, "#8a643f"));
-  addMesh("hanger-right-slope", taperedPanel(x + width * 0.2, railY - 0.03, z, 0.035, 0.025, 0.14, 0.028, "#8a643f"));
+  addMesh("hanger-bar", cuboid(x, railY - 0.105, z, width, 0.028, 0.034, "#8a643f"));
+  addMesh("hanger-left-shoulder", cuboid(x - width * 0.18, railY - 0.08, z, width * 0.38, 0.03, 0.034, "#8a643f"));
+  addMesh("hanger-right-shoulder", cuboid(x + width * 0.18, railY - 0.08, z, width * 0.38, 0.03, 0.034, "#8a643f"));
 }
 
 function makeHangingCoat(x, railY, z, fabric) {
@@ -1069,16 +1049,17 @@ function makeHangingCoat(x, railY, z, fabric) {
   const hemY = shoulderY - 0.76;
   const dark = fabric === "#53636b" ? "#33424a" : "#2c332e";
   makeHanger(x, railY, z, 0.42);
+  addMesh("coat-shadow-fold", softShadow(x, hemY + 0.02, z + 0.04, 0.28, 0.08));
   addMesh("coat-shoulder-pad", cuboid(x, shoulderY + 0.035, z, 0.48, 0.075, 0.11, fabric));
-  addMesh("coat-back-panel", taperedPanel(x, shoulderY, z, 0.45, 0.56, 0.76, 0.1, fabric));
-  addMesh("coat-front-left", taperedPanel(x - 0.12, shoulderY - 0.025, z + 0.055, 0.2, 0.25, 0.69, 0.035, fabric));
-  addMesh("coat-front-right", taperedPanel(x + 0.12, shoulderY - 0.025, z + 0.055, 0.2, 0.25, 0.69, 0.035, fabric));
-  addMesh("coat-left-sleeve", taperedPanel(x - 0.33, shoulderY - 0.02, z, 0.16, 0.2, 0.58, 0.075, fabric));
-  addMesh("coat-right-sleeve", taperedPanel(x + 0.33, shoulderY - 0.02, z, 0.16, 0.2, 0.58, 0.075, fabric));
-  addMesh("coat-left-cuff", cuboid(x - 0.33, hemY + 0.18, z + 0.01, 0.21, 0.045, 0.09, dark));
-  addMesh("coat-right-cuff", cuboid(x + 0.33, hemY + 0.18, z + 0.01, 0.21, 0.045, 0.09, dark));
-  addMesh("coat-hem", cuboid(x, hemY, z + 0.055, 0.58, 0.045, 0.045, dark));
-  addMesh("coat-center-opening", cuboid(x, shoulderY - 0.36, z + 0.079, 0.028, 0.62, 0.02, dark));
+  addMesh("coat-body-back", cuboid(x, shoulderY - 0.38, z, 0.5, 0.76, 0.085, fabric));
+  addMesh("coat-front-left", cuboid(x - 0.13, shoulderY - 0.37, z + 0.065, 0.23, 0.7, 0.035, fabric));
+  addMesh("coat-front-right", cuboid(x + 0.13, shoulderY - 0.37, z + 0.065, 0.23, 0.7, 0.035, fabric));
+  addMesh("coat-left-sleeve", cuboid(x - 0.34, shoulderY - 0.31, z, 0.16, 0.58, 0.075, fabric));
+  addMesh("coat-right-sleeve", cuboid(x + 0.34, shoulderY - 0.31, z, 0.16, 0.58, 0.075, fabric));
+  addMesh("coat-left-cuff", cuboid(x - 0.34, hemY + 0.18, z + 0.01, 0.19, 0.045, 0.09, dark));
+  addMesh("coat-right-cuff", cuboid(x + 0.34, hemY + 0.18, z + 0.01, 0.19, 0.045, 0.09, dark));
+  addMesh("coat-hem", cuboid(x, hemY, z + 0.055, 0.55, 0.045, 0.045, dark));
+  addMesh("coat-center-opening", cuboid(x, shoulderY - 0.36, z + 0.087, 0.028, 0.62, 0.02, dark));
   addMesh("coat-collar-left", cuboid(x - 0.06, shoulderY + 0.04, z + 0.075, 0.13, 0.09, 0.035, "#f2eadb"));
   addMesh("coat-collar-right", cuboid(x + 0.06, shoulderY + 0.04, z + 0.075, 0.13, 0.09, 0.035, "#f2eadb"));
 }
@@ -1088,9 +1069,9 @@ function makeHangingShirt(x, railY, z, fabric) {
   const hemY = shoulderY - 0.42;
   makeHanger(x, railY, z, 0.36);
   addMesh("shirt-shoulders", cuboid(x, shoulderY + 0.025, z, 0.43, 0.06, 0.075, fabric));
-  addMesh("shirt-body-panel", taperedPanel(x, shoulderY, z, 0.38, 0.42, 0.42, 0.075, fabric));
-  addMesh("shirt-left-sleeve", taperedPanel(x - 0.28, shoulderY - 0.02, z, 0.18, 0.15, 0.2, 0.065, fabric));
-  addMesh("shirt-right-sleeve", taperedPanel(x + 0.28, shoulderY - 0.02, z, 0.18, 0.15, 0.2, 0.065, fabric));
+  addMesh("shirt-body-panel", cuboid(x, shoulderY - 0.21, z, 0.4, 0.42, 0.075, fabric));
+  addMesh("shirt-left-sleeve", cuboid(x - 0.29, shoulderY - 0.1, z, 0.18, 0.2, 0.065, fabric));
+  addMesh("shirt-right-sleeve", cuboid(x + 0.29, shoulderY - 0.1, z, 0.18, 0.2, 0.065, fabric));
   addMesh("shirt-neck-hole", ellipsoid(x, shoulderY + 0.015, z + 0.05, 0.075, 0.035, 0.018, "#f8ead4", 6, 10));
   addMesh("shirt-hem", cuboid(x, hemY, z + 0.04, 0.43, 0.035, 0.035, "#d58a86"));
 }
@@ -1157,7 +1138,7 @@ function resize() {
 function render() {
   resize();
   gl.enable(gl.DEPTH_TEST);
-  gl.disable(gl.CULL_FACE);
+  gl.enable(gl.CULL_FACE);
   gl.clearColor(0, 0, 0, 0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.useProgram(program);
@@ -1296,8 +1277,6 @@ function completeOpeningIntro() {
 
 function enterRoomFromIntro() {
   world.classList.remove("is-intro");
-  window.setTimeout(resize, 60);
-  window.setTimeout(resize, 360);
 }
 
 function handleOpeningIntroClick() {
